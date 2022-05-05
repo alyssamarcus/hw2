@@ -88,8 +88,7 @@ studio.save
 
 warner_bros = Studio.find_by({"name" => "Warner Bros."})
 
-puts "There are #{Studio.all.count} studios."
-puts warner_bros.inspect
+#puts "There are #{Studio.all.count} studios."
 
 #movies
 
@@ -114,16 +113,11 @@ movie["rated"] = "PG-13"
 movie["studio_id"] = warner_bros["id"]
 movie.save
 
-puts "There are #{Movie.all.count} movies."
+#puts "There are #{Movie.all.count} movies."
 
 batman_begins = Movie.find_by({"title" => "Batman Begins"})
-puts batman_begins.inspect
-
 dark_knight = Movie.find_by({"title" => "The Dark Knight"})
-puts dark_knight.inspect
-
 dark_knight_rises = Movie.find_by({"title" => "The Dark Knight Rises"})
-puts dark_knight_rises.inspect
 
 # actors
 
@@ -171,7 +165,7 @@ actor = Actor.new
 actor["name"] = "Anne Hathaway"
 actor.save
 
-puts "There are #{Actor.all.count} actors."
+#puts "There are #{Actor.all.count} actors."
 
 christian_bale = Actor.find_by({"name" => "Christian Bale"})
 michael_caine = Actor.find_by({"name" => "Michael Caine"})
@@ -281,6 +275,9 @@ role["actor_id"] = anne_hathaway ["id"]
 role["character_name"] = "Selina Kyle"
 role.save
 
+wb_movies = Movie.where({"studio_id" => warner_bros["id"]})
+#puts wb_movies.inspect 
+
 # Prints a header for the movies output
 puts "Movies"
 puts "======"
@@ -288,18 +285,12 @@ puts ""
 
 # Query the movies data and loop through the results to display the movies output.
 
-movies = Movie.all
-puts movies.inspect
-for movie in movies
-    movie_id = movie["movie_id"]
-    movie_record = Movie.find_by({"id" => movie_id})
-    movie_title = movie_record["title"]
-    movie_year_released = movie_record["year_released"]
-    movie_rated = movie_record["rated"]
-    movie_studio_id = movie_record["studio_id"]
-
-    puts movie_record.inspect
-    puts "#{movie_title} #{movie_year_released} #{movie_rated} #{movie_studio_id}"
+for movie in wb_movies
+    movie_title = movie["title"]
+    movie_year_released = movie["year_released"]
+    movie_rated = movie["rated"]
+    movie_studio = warner_bros["name"]
+    puts "#{movie_title} #{movie_year_released} #{movie_rated} #{movie_studio}"
 end
 
 # Prints a header for the cast output
@@ -311,15 +302,20 @@ puts ""
 # Query the cast data and loop through the results to display the cast output for each movie.
 
 roles = Role.all
-puts roles.inspect
+#puts roles.inspect
+
 for role in roles
     actor_id = role["actor_id"]
     actor_record = Actor.find_by({"id" => actor_id})
     actor_name = actor_record["name"]
     role_name = role["character_name"]
-
+    movie_record = Movie.find_by({"id" => role["movie_id"]})
+    
+    #puts movie_record.inspect
+    movie_title = movie_record["title"]
     puts "#{movie_title} #{actor_name} #{role_name}"
 end
+
 
 
 
